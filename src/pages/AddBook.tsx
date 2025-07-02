@@ -1,7 +1,10 @@
+import AddBookModal from "@/components/AddBookModal"
+
 const AddBook = () => {
   return (
     <div>
-      add book
+      <h1 className="font-bold text-2xl text-center mb-6">Add A New Book</h1>
+      <AddBookModal/>
     </div>
   )
 }
