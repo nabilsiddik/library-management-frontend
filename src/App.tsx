@@ -1,8 +1,16 @@
+import { Outlet } from "react-router"
+import Footer from "./layouts/Footer"
+import Navbar from "./layouts/Navbar"
+
 function App() {
 
   return (
     <>
-      <h1 className="text-3xl">App</h1>
+      <Navbar/>
+        <div className="container mx-auto py-10">
+          <Outlet/>
+        </div>
+      <Footer/>
     </>
   )
 }
