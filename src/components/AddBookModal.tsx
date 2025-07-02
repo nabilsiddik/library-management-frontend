@@ -21,21 +21,30 @@ import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { useState } from "react"
 import type { Ibook } from './../interfaces/book.interface';
+import { useCreateTaskMutation } from "@/redux/api/baseApi"
+import { useNavigate } from "react-router"
 
 export function AddBookModal() {
     const form = useForm<Ibook>()
     const [isOpen, setIsOpen] = useState(false)
+    const navigate = useNavigate()
 
     const genras = ['FICTION', 'NON_FICTION', 'SCIENCE', 'HISTORY', 'BIOGRAPHY', 'FANTASY']
 
-    const onSubmit: SubmitHandler<FieldValues> = (data)  => {
+    const [addBook, { data }] = useCreateTaskMutation()
+
+    const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         const parsedData = {
             ...data,
             copies: Number(data.copies)
         }
-        setIsOpen(false)
-        form.reset()
-        console.log(parsedData)
+
+        const res = await addBook(parsedData).unwrap()
+        if (res?.data) {
+            setIsOpen(false)
+            navigate('/')
+            form.reset()
+        }
     }
 
     return (
@@ -153,7 +162,7 @@ export function AddBookModal() {
                             )}
                         />
 
-                        
+
 
                         <DialogFooter className="mt-5">
                             <DialogClose asChild>

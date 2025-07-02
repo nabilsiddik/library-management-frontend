@@ -34,8 +34,8 @@ function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {books?.length > 0 && books.map((book: any) => {
-                return <TableRow>
+              {books?.length > 0 && books.map((book: any, index: number) => {
+                return <TableRow key={index}>
                   <TableCell>{book?.title}</TableCell>
                   <TableCell>{book?.author}</TableCell>
                   <TableCell>{book?.genre}</TableCell>
