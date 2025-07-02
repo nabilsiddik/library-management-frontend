@@ -25,13 +25,15 @@ import { useCreateTaskMutation } from "@/redux/api/baseApi"
 import { useNavigate } from "react-router"
 
 export function AddBookModal() {
-    const form = useForm<Ibook>()
+    const form = useForm<Ibook>({
+        mode: 'onChange'
+    })
     const [isOpen, setIsOpen] = useState(false)
     const navigate = useNavigate()
 
     const genras = ['FICTION', 'NON_FICTION', 'SCIENCE', 'HISTORY', 'BIOGRAPHY', 'FANTASY']
 
-    const [addBook, { data }] = useCreateTaskMutation()
+    const [addBook] = useCreateTaskMutation()
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         const parsedData = {
@@ -66,6 +68,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="title"
+                            rules={{required: 'Title is required'}}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Title</FormLabel>
@@ -80,6 +83,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="author"
+                            rules={{ required: "Author is required" }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Author</FormLabel>
@@ -94,6 +98,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="genre"
+                            rules={{ required: "Genre is required" }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Genra</FormLabel>
@@ -122,6 +127,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="isbn"
+                            rules={{ required: "ISBN is required" }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>ISBN</FormLabel>
@@ -137,6 +143,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="description"
+                            rules={{ required: "Description is required" }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Description</FormLabel>
@@ -152,6 +159,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="copies"
+                            rules={{ required: "Copies are required" }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Copies</FormLabel>
@@ -168,7 +176,7 @@ export function AddBookModal() {
                             <DialogClose asChild>
                                 <Button variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button type="submit">Add Book</Button>
+                            <Button className="cursor-pointer" disabled={!form.formState.isValid} type="submit">Add Book</Button>
                         </DialogFooter>
                     </form>
                 </Form>

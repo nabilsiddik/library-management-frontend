@@ -1,18 +1,29 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { useGetAllBooksQuery } from "@/redux/api/baseApi"
+import { useDeleteBookMutation, useGetAllBooksQuery } from "@/redux/api/baseApi"
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
 
 
 function Home() {
   const { data, isLoading } = useGetAllBooksQuery(undefined)
-
+  const [deleteBook] = useDeleteBookMutation()
   if (isLoading) return <h3 className="font-bold text-2xl">Loading...</h3>
 
   const books = data?.data
 
-  console.log(books)
+  // delete book
+  const handleDeleteBook = async(bookId: string) => {
+    console.log(bookId)
+    try{
+      const res = await deleteBook(bookId).unwrap()
+      if(res?.success){
+        
+      }
+    }catch(error){
+      console.error('Delete failed', error)
+    }
+  }
 
   return (
     <>
@@ -44,7 +55,9 @@ function Home() {
                   <TableCell>{book?.available ? 'Available' : 'Unavailable'}</TableCell>
                   <TableCell className="flex items-center gap-3">
                     <span className="cursor-pointer text-xl"><FaRegEdit /></span>
-                    <span className="cursor-pointer text-xl"><FaRegTrashAlt /></span>
+                    <span className="cursor-pointer text-xl"><FaRegTrashAlt onClick={() => {
+                      handleDeleteBook(book?._id)
+                    }} /></span>
                     <Button className="cursor-pointer">Borrow</Button>
                   </TableCell>
                 </TableRow>
