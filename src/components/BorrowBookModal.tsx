@@ -19,7 +19,7 @@ import {
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { useEffect } from "react"
-import { useUpdateTaskMutation } from "@/redux/api/baseApi"
+import { useCreateBorrowMutation, useUpdateTaskMutation } from "@/redux/api/baseApi"
 import type { IBookInput } from "@/interfaces/book.interface"
 import { ToastContainer, toast } from 'react-toastify';
 import type { BorrowBookModalProps } from "@/interfaces/BorrowBookModalProps.interface"
@@ -43,26 +43,20 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
     //     }
     // }, [isOpen, updatedBook, form])
 
-    const [updateBook] = useUpdateTaskMutation()
+    const [createBorrow] = useCreateBorrowMutation()
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        // const UpdatedParsedData = {
-        //     ...data,
-        //     copies: Number(data.copies)
-        // }
+        console.log({...data, dueDate: new Date(data.dueDate), borrowedBookId})
 
-        // const res = await updateBook({
-        //     bookId: updatedBook?._id,
-        //     updatedData: UpdatedParsedData
-        // }).unwrap()
-        // console.log(res)
-        // if (res?.success) {
-        //     notify('Book successfully updated')
-        //     onClose()
-        //     form.reset()
-        // } else {
-        //     notify('Book update failed')
-        // }
+        const res = await createBorrow({...data, borrowedBookId}).unwrap()
+        console.log(res)
+        if (res?.success) {
+            notify('Book successfully borrowed')
+            onClose()
+            form.reset()
+        } else {
+            notify('Book borrowing failed')
+        }
     }
 
     return (
@@ -91,7 +85,7 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
                         />
 
                         {/* due date */}
-                        {/* <FormField
+                        <FormField
                             control={form.control}
                             name="dueDate"
                             render={({ field }) => (
@@ -127,7 +121,7 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
                                     </Popover>
                                 </FormItem>
                             )}
-                        /> */}
+                        />
 
                         <DialogFooter className="mt-5">
                             <DialogClose asChild>

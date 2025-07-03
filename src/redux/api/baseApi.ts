@@ -32,8 +32,15 @@ export const baseApi = createApi({
                 method: 'DELETE'
             }),
             invalidatesTags: ['book']
+        }),
+        createBorrow: build.mutation({
+            query: (borrowData) => ({
+                url: '/borrow',
+                method: 'POST',
+                body: borrowData,
+            })
         })
     })
 })
 
-export const { useGetAllBooksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation } = baseApi
+export const { useGetAllBooksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation, useCreateBorrowMutation } = baseApi
