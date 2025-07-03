@@ -5,7 +5,8 @@ export interface IBookInput {
     isbn: string,
     description?: string,
     copies: number,
-    _id?: string
+    _id?: string,
+    available?: boolean
 }
 
 export interface IBook extends IBookInput {

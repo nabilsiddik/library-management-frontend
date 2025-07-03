@@ -1,3 +1,4 @@
+import BorrowBookModal from "@/components/BorrowBookModal";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import UpdateBookModal from "@/components/UpdateBookModal";
@@ -11,26 +12,31 @@ import { ToastContainer, toast } from 'react-toastify';
 function Home() {
   const [updatedBook, setUpdatedBook] = useState<IBookInput | null>(null)
   const [updateModalOpen, setUpdateModalOpen] = useState(false)
+
+  const [borrowedBookId, setBorrowedBookId] = useState<string>('')
+  const [borrowModalOpen, setBorrowModalOpen] = useState(false)
+
   const { data, isLoading } = useGetAllBooksQuery(undefined)
   const [deleteBook] = useDeleteBookMutation()
+
   if (isLoading) return <h3 className="font-bold text-2xl">Loading...</h3>
 
   const books = data?.data
 
-   // toast notification
-   const notify = (message: string) => toast(message);
-  
+  // toast notification
+  const notify = (message: string) => toast(message);
+
 
   // delete book
-  const handleDeleteBook = async(bookId: string) => {
-    try{
+  const handleDeleteBook = async (bookId: string) => {
+    try {
       const res = await deleteBook(bookId).unwrap()
-      if(res?.success){
+      if (res?.success) {
         notify('Book successfully deleted')
-      }else{
+      } else {
         notify('Book Deletion failed')
       }
-    }catch(error){
+    } catch (error) {
       console.error('Delete failed', error)
     }
   }
@@ -41,10 +47,21 @@ function Home() {
     setUpdatedBook(book)
   }
 
+  // Borrow button click to borrow a book
+  const handleBorrowClick = (bookId: string) => {
+    setBorrowedBookId(bookId)
+    setBorrowModalOpen(true)
+  }
+
   return (
     <>
       <ToastContainer />
-      <UpdateBookModal isOpen={updateModalOpen} onClose={() => {setUpdateModalOpen(false)}} updatedBook = {updatedBook}/>
+      {/* update book modal  */}
+      <UpdateBookModal isOpen={updateModalOpen} onClose={() => { setUpdateModalOpen(false) }} updatedBook={updatedBook} />
+
+      {/* borrow book modal  */}
+      <BorrowBookModal isOpen={borrowModalOpen} onClose={() => { setBorrowModalOpen(false) }} borrowedBookId={borrowedBookId} />
+
       <div className="w-full">
         <div className="flex items-center py-4">
         </div>
@@ -69,7 +86,7 @@ function Home() {
                   <TableCell>{book?.genre}</TableCell>
                   <TableCell>{book?.isbn}</TableCell>
                   <TableCell>{book?.copies}</TableCell>
-                  <TableCell>{book?.available ? 'Available' : 'Unavailable'}</TableCell>
+                  <TableCell>{book?.available && book.copies > 0 ? 'Available' : 'Unavailable'}</TableCell>
                   <TableCell className="flex items-center gap-3">
                     <span className="cursor-pointer text-xl"><FaRegEdit onClick={() => {
                       handleUpdateClick(book)
@@ -77,7 +94,9 @@ function Home() {
                     <span className="cursor-pointer text-xl"><FaRegTrashAlt onClick={() => {
                       handleDeleteBook(book?._id)
                     }} /></span>
-                    <Button className="cursor-pointer">Borrow</Button>
+                    <Button onClick={() => {
+                      handleBorrowClick(book?._id)
+                    }} className="cursor-pointer">Borrow</Button>
                   </TableCell>
                 </TableRow>
               })}
@@ -85,9 +104,6 @@ function Home() {
           </Table>
         </div>
       </div>
-      {/* {books.length > 0 && books.map((book) => {
-        return <h1>{book.isbn}</h1>
-      })} */}
     </>
   )
 }

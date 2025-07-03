@@ -168,7 +168,13 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="copies"
-                            rules={{ required: "Copies are required" }}
+                            rules={{ 
+                                required: "Copies are required",
+                                min: {
+                                    value: 0,
+                                    message: 'Copies cannot be less than 0'
+                                }
+                             }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Copies</FormLabel>
