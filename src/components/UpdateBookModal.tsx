@@ -19,53 +19,53 @@ import {
 } from "./ui/form"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { useState } from "react"
-import type { IBook } from './../interfaces/book.interface';
-import { useCreateTaskMutation } from "@/redux/api/baseApi"
+import { useEffect, useState } from "react"
+import { useCreateTaskMutation, useUpdateTaskMutation } from "@/redux/api/baseApi"
 import { useNavigate } from "react-router"
+import type { UpdateBookModalProps } from "@/interfaces/UpdateBookModalProps.interface"
+import type { IBookInput } from "@/interfaces/book.interface"
 import { ToastContainer, toast } from 'react-toastify';
 
-export function AddBookModal() {
-    const form = useForm<IBook>({
-        mode: 'onChange'
-    })
-    const [isOpen, setIsOpen] = useState(false)
-    const navigate = useNavigate()
+export function UpdateBookModal({ updatedBook, isOpen, onClose }: UpdateBookModalProps) {
+    const form = useForm<IBookInput>()
+    
+    // toast notification
+     const notify = (message: string) => toast(message);
+
+
+    useEffect(() => {
+        if(isOpen && updatedBook){
+            form.reset(updatedBook)
+        }
+    }, [isOpen, updatedBook, form])
 
     const genras = ['FICTION', 'NON_FICTION', 'SCIENCE', 'HISTORY', 'BIOGRAPHY', 'FANTASY']
 
-    const [addBook] = useCreateTaskMutation()
-
-     // toast notification
-     const notify = (message: string) => toast(message);
+    const [updateBook] = useUpdateTaskMutation()
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const parsedData = {
+        const UpdatedParsedData = {
             ...data,
             copies: Number(data.copies)
         }
 
-        const res = await addBook(parsedData).unwrap()
+        const res = await updateBook({
+            bookId: updatedBook?._id,
+            updatedData: UpdatedParsedData
+        }).unwrap()
         console.log(res)
         if (res?.success) {
-            notify('Book successfully added')
-            setIsOpen(false)
-            navigate('/')
+            notify('Book successfully updated')
+            onClose()
             form.reset()
         }else{
-            notify('Book addition failed')
+            notify('Book update failed')
         }
     }
 
     return (
-        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+        <Dialog open={isOpen}>
             <ToastContainer />
-            <div className="flex justify-center">
-                <DialogTrigger asChild>
-                    <Button variant="outline">Add Book</Button>
-                </DialogTrigger>
-            </div>
-
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle className="text-center">Add Book</DialogTitle>
@@ -77,7 +77,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="title"
-                            rules={{required: 'Title is required'}}
+                            rules={{ required: 'Title is required' }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Title</FormLabel>
@@ -114,7 +114,7 @@ export function AddBookModal() {
                                     <FormControl>
                                         <Select
                                             onValueChange={field.onChange}
-                                            defaultValue={field.value}
+                                            defaultValue={updatedBook?.genre}
                                         >
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Select Genra" />
@@ -132,7 +132,7 @@ export function AddBookModal() {
                             )}
                         />
 
-                        {/* book author  */}
+                        {/* book isbn  */}
                         <FormField
                             control={form.control}
                             name="isbn"
@@ -183,9 +183,11 @@ export function AddBookModal() {
 
                         <DialogFooter className="mt-5">
                             <DialogClose asChild>
-                                <Button variant="outline">Cancel</Button>
+                                <Button onClick={() => {
+                                    onClose()
+                                }} variant="outline">Cancel</Button>
                             </DialogClose>
-                            <Button className="cursor-pointer" disabled={!form.formState.isValid} type="submit">Add Book</Button>
+                            <Button className="cursor-pointer" type="submit">Update Book</Button>
                         </DialogFooter>
                     </form>
                 </Form>
@@ -194,4 +196,4 @@ export function AddBookModal() {
     )
 }
 
-export default AddBookModal
+export default UpdateBookModal

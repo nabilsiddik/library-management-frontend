@@ -1,33 +1,50 @@
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import UpdateBookModal from "@/components/UpdateBookModal";
+import type { IBook, IBookInput } from "@/interfaces/book.interface";
 import { useDeleteBookMutation, useGetAllBooksQuery } from "@/redux/api/baseApi"
+import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
-
+import { ToastContainer, toast } from 'react-toastify';
 
 function Home() {
+  const [updatedBook, setUpdatedBook] = useState<IBookInput | null>(null)
+  const [updateModalOpen, setUpdateModalOpen] = useState(false)
   const { data, isLoading } = useGetAllBooksQuery(undefined)
   const [deleteBook] = useDeleteBookMutation()
   if (isLoading) return <h3 className="font-bold text-2xl">Loading...</h3>
 
   const books = data?.data
 
+   // toast notification
+   const notify = (message: string) => toast(message);
+  
+
   // delete book
   const handleDeleteBook = async(bookId: string) => {
-    console.log(bookId)
     try{
       const res = await deleteBook(bookId).unwrap()
       if(res?.success){
-        
+        notify('Book successfully deleted')
+      }else{
+        notify('Book Deletion failed')
       }
     }catch(error){
       console.error('Delete failed', error)
     }
   }
 
+  // Update book icon click
+  const handleUpdateClick = (book: IBookInput) => {
+    setUpdateModalOpen(true)
+    setUpdatedBook(book)
+  }
+
   return (
     <>
-
+      <ToastContainer />
+      <UpdateBookModal isOpen={updateModalOpen} onClose={() => {setUpdateModalOpen(false)}} updatedBook = {updatedBook}/>
       <div className="w-full">
         <div className="flex items-center py-4">
         </div>
@@ -45,7 +62,7 @@ function Home() {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {books?.length > 0 && books.map((book: any, index: number) => {
+              {books?.length > 0 && books.map((book: IBook, index: number) => {
                 return <TableRow key={index}>
                   <TableCell>{book?.title}</TableCell>
                   <TableCell>{book?.author}</TableCell>
@@ -54,7 +71,9 @@ function Home() {
                   <TableCell>{book?.copies}</TableCell>
                   <TableCell>{book?.available ? 'Available' : 'Unavailable'}</TableCell>
                   <TableCell className="flex items-center gap-3">
-                    <span className="cursor-pointer text-xl"><FaRegEdit /></span>
+                    <span className="cursor-pointer text-xl"><FaRegEdit onClick={() => {
+                      handleUpdateClick(book)
+                    }} /></span>
                     <span className="cursor-pointer text-xl"><FaRegTrashAlt onClick={() => {
                       handleDeleteBook(book?._id)
                     }} /></span>
