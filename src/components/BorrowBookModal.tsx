@@ -88,6 +88,7 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
                         <FormField
                             control={form.control}
                             name="dueDate"
+                            rules={{required: 'Date is required'}}
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Borrow Due Date</FormLabel>

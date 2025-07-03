@@ -38,9 +38,13 @@ export const baseApi = createApi({
                 url: '/borrow',
                 method: 'POST',
                 body: borrowData,
-            })
+            }),
+            invalidatesTags: ['book']
+        }),
+        borrowedSummery: build.query({
+            query: () => '/borrow'
         })
     })
 })
 
-export const { useGetAllBooksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation, useCreateBorrowMutation } = baseApi
+export const { useGetAllBooksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation, useCreateBorrowMutation, useBorrowedSummeryQuery } = baseApi
