@@ -19,6 +19,9 @@ import {
   AlertDialogCancel,
   AlertDialogAction,
 } from "@/components/ui/alert-dialog"
+import { FaEye } from "react-icons/fa";
+import { Link } from "react-router";
+
 
 function Allbooks() {
   const [updatedBook, setUpdatedBook] = useState<IBookInput | null>(null)
@@ -92,7 +95,16 @@ function Allbooks() {
                   <TableCell>{book?.isbn}</TableCell>
                   <TableCell>{book?.copies}</TableCell>
                   <TableCell>{book?.available && book.copies > 0 ? 'Available' : 'Unavailable'}</TableCell>
-                  <TableCell className="flex items-center gap-3">
+                  <TableCell className="flex items-center gap-4">
+
+                    {/* view icon  */}
+                    <span className="cursor-pointer text-xl">
+                      <Link to={`/book/${book?._id}`}>
+                        <FaEye />
+                      </Link>
+                    </span>
+                    
+                    {/* edit icon  */}
                     <span className="cursor-pointer text-xl"><FaRegEdit onClick={() => {
                       handleUpdateClick(book)
                     }} /></span>

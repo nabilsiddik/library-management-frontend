@@ -10,6 +10,10 @@ export const baseApi = createApi({
             query: () => '/books',
             providesTags: ['book']
         }),
+        getBookById: build.query({
+            query: (id) => `/books/${id}`,
+            providesTags: ['book']
+        }),
         createTask: build.mutation({
             query: (bookData) => ({
                 url: '/books',
@@ -48,4 +52,4 @@ export const baseApi = createApi({
     })
 })
 
-export const { useGetAllBooksQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation, useCreateBorrowMutation, useBorrowedSummeryQuery } = baseApi
+export const { useGetAllBooksQuery, useGetBookByIdQuery, useCreateTaskMutation, useUpdateTaskMutation, useDeleteBookMutation, useCreateBorrowMutation, useBorrowedSummeryQuery } = baseApi
