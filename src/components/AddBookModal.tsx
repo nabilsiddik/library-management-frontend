@@ -23,7 +23,7 @@ import { useState } from "react"
 import type { IBook } from './../interfaces/book.interface';
 import { useCreateTaskMutation } from "@/redux/api/baseApi"
 import { useNavigate } from "react-router"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export function AddBookModal() {
     const form = useForm<IBook>({
@@ -36,30 +36,36 @@ export function AddBookModal() {
 
     const [addBook] = useCreateTaskMutation()
 
-     // toast notification
-     const notify = (message: string) => toast(message);
+    // toast notification
+    const notify = (message: string) => toast(message);
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const parsedData = {
-            ...data,
-            copies: Number(data.copies)
-        }
+        try {
+            const parsedData = {
+                ...data,
+                copies: Number(data.copies)
+            }
 
-        const res = await addBook(parsedData).unwrap()
-        console.log(res)
-        if (res?.success) {
-            notify('Book successfully added')
-            setIsOpen(false)
-            navigate('/')
-            form.reset()
-        }else{
-            notify('Book addition failed')
+            const res = await addBook(parsedData).unwrap()
+            console.log(res)
+            if (res?.success) {
+                toast.success('Book successfully added')
+                setIsOpen(false)
+                navigate('/')
+                form.reset()
+            }
+        }catch(error: any){
+            if (error?.data?.message?.includes('E11000') && error?.data?.message?.includes('isbn')
+            ){
+                toast.error("A book with this ISBN already exists");
+            }else {
+                toast.error(error?.data?.message || "Failed to Add book");
+            }
         }
     }
 
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-            <ToastContainer />
             <div className="flex justify-center">
                 <DialogTrigger asChild>
                     <Button variant="outline">Add Book</Button>
@@ -77,7 +83,7 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="title"
-                            rules={{required: 'Title is required'}}
+                            rules={{ required: 'Title is required' }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Title</FormLabel>
@@ -168,13 +174,13 @@ export function AddBookModal() {
                         <FormField
                             control={form.control}
                             name="copies"
-                            rules={{ 
+                            rules={{
                                 required: "Copies are required",
                                 min: {
                                     value: 0,
                                     message: 'Copies cannot be less than 0'
                                 }
-                             }}
+                            }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Copies</FormLabel>

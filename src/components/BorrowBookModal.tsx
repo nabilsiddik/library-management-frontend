@@ -17,7 +17,7 @@ import {
     FormLabel,
 } from "./ui/form"
 import { useCreateBorrowMutation } from "@/redux/api/baseApi"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import type { BorrowBookModalProps } from "@/interfaces/BorrowBookModalProps.interface"
 import type { IBorrow } from "@/interfaces/borrow.interface"
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover"
@@ -25,39 +25,30 @@ import { CalendarIcon } from "lucide-react"
 import { Calendar } from "./ui/calendar"
 import { cn } from "@/lib/utils"
 import { format } from "date-fns"
+import { useNavigate } from "react-router"
 
 export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookModalProps) {
     const form = useForm<IBorrow>()
-
-    // toast notification
-    const notify = (message: string) => toast(message);
-
-
-    // useEffect(() => {
-    //     if(isOpen && updatedBook){
-    //         form.reset(updatedBook)
-    //     }
-    // }, [isOpen, updatedBook, form])
-
     const [createBorrow] = useCreateBorrowMutation()
+    const navigate = useNavigate()
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        console.log({...data, dueDate: new Date(data.dueDate), borrowedBookId})
-
-        const res = await createBorrow({...data, borrowedBookId}).unwrap()
-        console.log(res)
-        if (res?.success) {
-            notify('Book successfully borrowed')
-            onClose()
-            form.reset()
-        } else {
-            notify('Book borrowing failed')
+        try {
+            const res = await createBorrow({ ...data, borrowedBookId }).unwrap()
+            if (res.success) {
+                toast.success('Book successfully borrowed')
+                onClose()
+                form.reset()
+                navigate('/borrow-summary')
+            }
+        }catch(error: any){
+            console.error('Borrowing Error', error)
+            toast.error(error?.data?.message || 'Book borrowing failed')
         }
     }
 
     return (
         <Dialog open={isOpen}>
-            <ToastContainer />
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle className="text-center">Borrow Book</DialogTitle>
@@ -65,16 +56,16 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
 
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-                        {/* book copies  */}
+                        {/* book quantity  */}
                         <FormField
                             control={form.control}
                             name="quantity"
                             rules={{ required: "Quantity is required" }}
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Copies</FormLabel>
+                                    <FormLabel>Quantity</FormLabel>
                                     <FormControl>
-                                        <Input type='number' {...field} value={field.value || ''} placeholder="Number of Quantity" />
+                                        <Input min={1} type='number' {...field} value={field.value || ''} placeholder="Number of Quantity" />
                                     </FormControl>
                                 </FormItem>
                             )}
@@ -84,7 +75,7 @@ export function BorrowBookModal({ borrowedBookId, isOpen, onClose }: BorrowBookM
                         <FormField
                             control={form.control}
                             name="dueDate"
-                            rules={{required: 'Date is required'}}
+                            rules={{ required: 'Date is required' }}
                             render={({ field }) => (
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Borrow Due Date</FormLabel>

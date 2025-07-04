@@ -4,7 +4,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 export const baseApi = createApi({
     reducerPath: 'baseApi',
     baseQuery: fetchBaseQuery({ baseUrl: `http://localhost:5000/api` }),
-    tagTypes: ['book'],
+    tagTypes: ['book', 'borrow'],
     endpoints: (build) => ({
         getAllBooks: build.query({
             query: () => '/books',
@@ -39,10 +39,11 @@ export const baseApi = createApi({
                 method: 'POST',
                 body: borrowData,
             }),
-            invalidatesTags: ['book']
+            invalidatesTags: ['book', 'borrow']
         }),
         borrowedSummery: build.query({
-            query: () => '/borrow'
+            query: () => '/borrow',
+            providesTags: ['borrow']
         })
     })
 })

@@ -1,16 +1,19 @@
 import { Outlet } from "react-router"
 import Footer from "./layouts/Footer"
 import Navbar from "./layouts/Navbar"
+import { ToastContainer } from "react-toastify"
 
 function App() {
 
   return (
     <>
-      <Navbar/>
-        <div className="container mx-auto py-10">
-          <Outlet/>
-        </div>
-      <Footer/>
+      <ToastContainer closeOnClick
+        autoClose={2000} draggable={true} />
+      <Navbar />
+      <div className="container mx-auto py-10">
+        <Outlet />
+      </div>
+      <Footer />
     </>
   )
 }

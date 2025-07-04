@@ -7,7 +7,7 @@ import { useDeleteBookMutation, useGetAllBooksQuery } from "@/redux/api/baseApi"
 import { useState } from "react";
 import { FaRegEdit } from "react-icons/fa";
 import { FaRegTrashAlt } from "react-icons/fa";
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 import {
   AlertDialog,
   AlertDialogTrigger,
@@ -34,21 +34,16 @@ function Allbooks() {
 
   const books = data?.data
 
-  // toast notification
-  const notify = (message: string) => toast(message);
-
-
   // delete book
   const handleDeleteBook = async (bookId: string) => {
     try {
       const res = await deleteBook(bookId).unwrap()
       if (res?.success) {
-        notify('Book successfully deleted')
-      } else {
-        notify('Book Deletion failed')
+        toast.success('Book successfully deleted')
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Delete failed', error)
+      toast.error(error?.data?.message)
     }
   }
 
@@ -66,7 +61,6 @@ function Allbooks() {
 
   return (
     <>
-      <ToastContainer />
       {/* update book modal  */}
       <UpdateBookModal isOpen={updateModalOpen} onClose={() => { setUpdateModalOpen(false) }} updatedBook={updatedBook} />
 

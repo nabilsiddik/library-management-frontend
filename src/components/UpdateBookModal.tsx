@@ -19,20 +19,16 @@ import {
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
 import { useEffect } from "react"
-import {  useUpdateTaskMutation } from "@/redux/api/baseApi"
+import { useUpdateTaskMutation } from "@/redux/api/baseApi"
 import type { UpdateBookModalProps } from "@/interfaces/UpdateBookModalProps.interface"
 import type { IBookInput } from "@/interfaces/book.interface"
-import { ToastContainer, toast } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 export function UpdateBookModal({ updatedBook, isOpen, onClose }: UpdateBookModalProps) {
     const form = useForm<IBookInput>()
-    
-    // toast notification
-     const notify = (message: string) => toast(message);
-
 
     useEffect(() => {
-        if(isOpen && updatedBook){
+        if (isOpen && updatedBook) {
             form.reset(updatedBook)
         }
     }, [isOpen, updatedBook, form])
@@ -42,28 +38,35 @@ export function UpdateBookModal({ updatedBook, isOpen, onClose }: UpdateBookModa
     const [updateBook] = useUpdateTaskMutation()
 
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-        const UpdatedParsedData = {
-            ...data,
-            copies: Number(data.copies)
-        }
+        try {
+            const UpdatedParsedData = {
+                ...data,
+                copies: Number(data.copies)
+            }
 
-        const res = await updateBook({
-            bookId: updatedBook?._id,
-            updatedData: UpdatedParsedData
-        }).unwrap()
-        console.log(res)
-        if (res?.success) {
-            notify('Book successfully updated')
-            onClose()
-            form.reset()
-        }else{
-            notify('Book update failed')
+            const res = await updateBook({
+                bookId: updatedBook?._id,
+                updatedData: UpdatedParsedData
+            }).unwrap()
+            console.log(res)
+            if (res?.success) {
+                toast.success('Book successfully updated')
+                onClose()
+                form.reset()
+            }
+        } catch (error: any) {
+            console.error('Book addition error', error)
+            if (error?.data?.message?.includes('E11000') && error?.data?.message?.includes('isbn')
+            ){
+                toast.error("A book with this ISBN already exists");
+            }else {
+                toast.error(error?.data?.message || "Failed to update book");
+            }
         }
     }
 
     return (
         <Dialog open={isOpen}>
-            <ToastContainer />
             <DialogContent className="sm:max-w-[425px]">
                 <DialogHeader>
                     <DialogTitle className="text-center">Add Book</DialogTitle>
