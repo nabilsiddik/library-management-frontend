@@ -118,3 +118,11 @@
     @apply bg-background text-foreground;
   }
 }
+
+
+/* custom css */
+#navbar .active{
+  background: var(--secondary);
+  padding: 5px 7px;
+  border-radius: 5px;
+}

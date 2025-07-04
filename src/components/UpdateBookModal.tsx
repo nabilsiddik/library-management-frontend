@@ -166,12 +166,18 @@ export function UpdateBookModal({ updatedBook, isOpen, onClose }: UpdateBookModa
                         <FormField
                             control={form.control}
                             name="copies"
-                            rules={{ required: "Copies are required" }}
+                            rules={{
+                                required: "Copies are required",
+                                min: {
+                                    value: 0,
+                                    message: 'Minimum vlaue is 0'
+                                }
+                            }}
                             render={({ field }) => (
                                 <FormItem>
                                     <FormLabel>Copies</FormLabel>
                                     <FormControl>
-                                        <Input type='number' {...field} value={field.value || ''} placeholder="Number of Copies" />
+                                        <Input min={0} type='number' {...field} value={field.value || ''} placeholder="Number of Copies" />
                                     </FormControl>
                                 </FormItem>
                             )}
