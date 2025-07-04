@@ -6,7 +6,6 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { useForm, type FieldValues, type SubmitHandler } from "react-hook-form"
@@ -19,9 +18,8 @@ import {
 } from "./ui/form"
 import { Textarea } from "./ui/textarea"
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from "./ui/select"
-import { useEffect, useState } from "react"
-import { useCreateTaskMutation, useUpdateTaskMutation } from "@/redux/api/baseApi"
-import { useNavigate } from "react-router"
+import { useEffect } from "react"
+import {  useUpdateTaskMutation } from "@/redux/api/baseApi"
 import type { UpdateBookModalProps } from "@/interfaces/UpdateBookModalProps.interface"
 import type { IBookInput } from "@/interfaces/book.interface"
 import { ToastContainer, toast } from 'react-toastify';
