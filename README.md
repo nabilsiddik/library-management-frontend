@@ -1,69 +1,60 @@
-# React + TypeScript + Vite
+# Minimal Library Management System
+Boi Dokan is a clean, functional, and responsive **Library Management System** built with **React + TypeScript**, **Redux Toolkit Query**, **Node.js**, and **MongoDB**. The system allows users to manage books and borrowing activities with full CRUD support—all without login or authentication.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+##  Live Demo
+- **Frontend**: [View Frontend](https://your-frontend-link.com)  
+- **Backend API**: [View Server](https://library-management-api-fawn.vercel.app/)
 
-Currently, two official plugins are available:
+## API Endpoints
+### Books
+- `GET /api/books`
+- `POST /api/books`
+- `PATCH /api/books/:id`
+- `DELETE /api/books/:id`
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+### Borrows
+- `POST /api/borrow`
+- `GET /api/borrow-summary`
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Book Management
+- **List View**: View all books in a responsive table layout.
+- **Add Book**: Create a new book with all necessary fields.
+- **Edit Book**: Update book details inline via form.
+- **Delete Book**: Remove a book with confirmation.
+- **Borrow Book**: Borrow books with quantity and due date.
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Borrow Summary
+- View an aggregated summary of borrowed books.
+- Shows book title, ISBN, and total borrowed count.
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+## Tech Stack
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Frontend**: React + TypeScript
+- **State Management**: Redux Toolkit + RTK Query 
+- **Styling**: Tailwind CSS
+- **Backend**: Node.js + Express.js
+- **Database**: MongoDB + Mongoose
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Environment Variables
+### Frontend
+VITE_MAIN_SERVER_URI=
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+### Backend
+MONGODB_URI=
+
+
+## Installation
+### Backend + Frontend
+```bash
+cd library-management-api
+npm install
+npm run dev
+
+
+cd library-management-frontend
+npm install
+npm run dev
+
+

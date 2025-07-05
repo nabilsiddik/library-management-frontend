@@ -29,7 +29,7 @@ const Navbar = () => {
                 </div>
 
                 {/* mobile menu  */}
-                <div className='relative'>
+                <div className='relative md:hidden'>
                     <FaChartBar onClick={() => {
                         setIsMobileMenuOpen(!isMobileMenuOpen)
                     }} className='text-xl cursor-pointer' />
