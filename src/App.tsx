@@ -10,7 +10,7 @@ function App() {
       <ToastContainer closeOnClick
         autoClose={2000} draggable={true} />
       <Navbar />
-      <div className="container mx-auto py-10">
+      <div className="container mx-auto py-10 px-5">
         <Outlet />
       </div>
       <Footer />

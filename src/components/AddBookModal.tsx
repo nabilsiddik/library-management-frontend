@@ -36,9 +36,6 @@ export function AddBookModal() {
 
     const [addBook] = useCreateTaskMutation()
 
-    // toast notification
-    const notify = (message: string) => toast(message);
-
     const onSubmit: SubmitHandler<FieldValues> = async (data) => {
         try {
             const parsedData = {
