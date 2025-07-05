@@ -2,7 +2,7 @@
 Boi Dokan is a clean, functional, and responsive **Library Management System** built with **React + TypeScript**, **Redux Toolkit Query**, **Node.js**, and **MongoDB**. The system allows users to manage books and borrowing activities with full CRUD support—all without login or authentication.
 
 ##  Live Demo
-- **Frontend**: [View Frontend](https://your-frontend-link.com)  
+- **Frontend**: [View Frontend](https://library-management-frontend-taupe.vercel.app/)  
 - **Backend API**: [View Server](https://library-management-api-fawn.vercel.app/)
 
 ## API Endpoints

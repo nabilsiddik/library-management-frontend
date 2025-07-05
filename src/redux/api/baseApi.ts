@@ -3,7 +3,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 
 export const baseApi = createApi({
     reducerPath: 'baseApi',
-    baseQuery: fetchBaseQuery({ baseUrl: `http://localhost:5000/api` }),
+    baseQuery: fetchBaseQuery({ baseUrl: `${import.meta.env.VITE_MAIN_SERVER_URI}/api` }),
     tagTypes: ['book', 'borrow'],
     endpoints: (build) => ({
         getAllBooks: build.query({
